@@ -5,13 +5,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="oidcpy",
-    version="0.0.1",
+    version="0.0.3",
     author="Marcel van den Dungen",
     author_email="author@example.com",
     description="OpenID Connect library code",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/marcelvandendungen/oidcpy",
+    py_modules=["authorize"],
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

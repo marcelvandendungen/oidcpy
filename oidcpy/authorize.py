@@ -1,7 +1,7 @@
-import jwk
 import jwt
 import os
 import requests
+from jwcrypto import jwk
 from functools import wraps
 from flask import request
 
