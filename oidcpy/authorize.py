@@ -12,8 +12,8 @@ class AuthorizeError(Exception):
         self.status = status
 
 
-def retrieve_public_key(url):
-    response = requests.get(url, verify=False)
+def retrieve_public_key(url, verify_ssl=True):
+    response = requests.get(url, verify=verify_ssl)
     key = jwk.JWK.from_json(response.content)
     return key.export_to_pem()
 
@@ -28,10 +28,12 @@ key_location = os.getenv('KEY_LOCATION', None)
 if not key_location:
     raise AuthorizeError('key location not set', 500)
 
+verify_ssl = os.getenv('VERIFY_SSL', 'FALSE') == 'TRUE'
+
 if os.path.exists(key_location):
     public_key = read_public_key(key_location)
 else:
-    public_key = retrieve_public_key(key_location)
+    public_key = retrieve_public_key(key_location, verify_ssl)
 
 
 def validate_auth_header(headers, audience, scopes):
