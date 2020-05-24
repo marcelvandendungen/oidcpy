@@ -5,8 +5,15 @@ from jwcrypto import jwk
 from functools import wraps
 from flask import request
 
+from .crypto import read_file
+
 
 class AuthorizeError(Exception):
+    """
+      Error thrown when authorization failed.
+      Holds `status` field with suggested response code.
+      Holds `message` field with description of failure. 
+    """
     def __init__(self, message, status=401):
         super().__init__(message)
         self.status = status
@@ -18,11 +25,6 @@ def retrieve_public_key(url, verify_ssl=True):
     return key.export_to_pem()
 
 
-def read_public_key(filename):
-    with open(filename, "rb") as f1:
-        key = f1.read()
-        return key
-
 key_location = os.getenv('KEY_LOCATION', None)
 
 if not key_location:
@@ -31,7 +33,7 @@ if not key_location:
 verify_ssl = os.getenv('VERIFY_SSL', 'FALSE') == 'TRUE'
 
 if os.path.exists(key_location):
-    public_key = read_public_key(key_location)
+    public_key = read_file(key_location)
 else:
     public_key = retrieve_public_key(key_location, verify_ssl)
 
